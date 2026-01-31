@@ -1,0 +1,28 @@
+# Virtual environment
+myenv/
+venv/
+.env/
+.venv/
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Static / media build outputs
+staticfiles/
+media/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+   
