@@ -9,10 +9,20 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <header>
-        <a class="position-absolute start-0" href="{% url 'home' %}">Home</a>
-        <h1>Library Management System</h1>
-    </header>
+<header>
+    <!-- Navigation link to home page -->
+    <a class="position-absolute start-0" href="{% url 'home' %}">Home</a>
+
+    <!-- Page title -->
+    <h1 class="text-center flex-grow-1">Library Management System</h1>
+
+    <!-- Logout form -->
+    <form method="POST" action="{% url 'logout' %}" class="mx-auto">
+        {% csrf_token %}  <!-- CSRF protection -->
+        <button type="submit" class="btn btn-primary">Logout</button>
+    </form>
+</header>
+
 
     <section>
         {% block content%}

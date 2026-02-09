@@ -1,9 +1,14 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout  
+from django.contrib.auth.decorators import login_required  
+
 from datetime import datetime
 from .models import User , Book , Borrow 
+@login_required(login_url='login')
 def Home(request):
     return render(request, 'home.html')
 
+@login_required(login_url='login')
 def Write(request):
     users = User.objects.all()
     books = Book.objects.all()
@@ -57,7 +62,7 @@ def Write(request):
 
     return render(request, 'Write.html', {'users': users, 'books': books})
 
-
+@login_required(login_url='login')
 def Read(request):
     user = User.objects.all()
     book = Book.objects.all()
@@ -68,6 +73,7 @@ def Read(request):
         'borrows': borrow,
     })
 
+@login_required(login_url='login')
 def Delete(request):
     users = User.objects.all()
     books = Book.objects.all()
@@ -88,6 +94,7 @@ def Delete(request):
         'books': books
     })
 
+@login_required(login_url='login')
 def Update(request):
     users = User.objects.all()
     books = Book.objects.all()
@@ -107,6 +114,7 @@ def Update(request):
         'books': books
     })
 
+@login_required(login_url='login')
 def EditUser(request, user_id):
     user = User.objects.get(user_id=user_id)
 
@@ -131,3 +139,30 @@ def EditBook(request, book_id):
 
             return redirect('update')
     return render(request, 'editbook.html')
+
+def Login(request):
+    if request.method == 'POST':
+        if 'verify' in request.POST:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            # Authenticate user credentials
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # Log the user in and start session
+                login(request, user)
+                request.session.set_expiry(0)  # Session expires on browser close
+                return redirect('home')
+            else:
+                # Redirect if authentication fails
+                return redirect('error')
+
+    # Render login page for GET request
+    return render(request, 'login.html')
+
+@login_required(login_url='login')
+def Logout(request):
+    # End user session and log out
+    logout(request)
+    return redirect('login')
